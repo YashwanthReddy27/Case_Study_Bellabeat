@@ -50,5 +50,25 @@ The dataset is provided in long format.
 
 ➡ Overall, the dataset **does not fully meet the ROCCC criteria**.
 
-#
+# 3. Process
+I used R to conduct my analysis as it is easy to use and keeping in mind the amount of data we have.
+
+'''r
+# Install and Load required Packages 
+install.packages("tidyverse")
+install.packages("janitor")
+install.packages("ggpubr")
+install.packages("here")
+install.packages("skimr")
+install.packages("ggrepel")
+
+library(tidyverse)
+library(janitor)
+library(ggpubr)
+library(here)
+library(skimr)
+library(ggrepel)
+library(lubridate)
+library(dplyr)
+
 
