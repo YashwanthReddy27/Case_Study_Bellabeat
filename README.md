@@ -5,7 +5,9 @@ Bellabeat is a high-tech company that manufactures health-focused products. Coll
 # 1. Ask 
  ## 📊 Business Task
 
-This project aims to analyze Fitbit smart device usage data to uncover customer trends and behavioral patterns. These insights will support Bellabeat’s marketing team by identifying what features and habits users most value, helping guide product marketing strategies and future development.
+This project analyzes Fitbit smart device usage data to uncover customer trends and behavioral patterns. These insights will support Bellabeat’s marketing team by identifying what features and habits users most value, helping guide product marketing strategies and future development.
+
+---
 
 ## Key Stakeholder
 Urska Srsen - Bellabeat cofounder and Chief Creative Officer
