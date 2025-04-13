@@ -53,8 +53,8 @@ The dataset is provided in long format.
 # 3. Process
 I used R to conduct my analysis as it is easy to use and keeping in mind the amount of data we have.
 
+### Install and Load required Packages 
 ```r
-# Install and Load required Packages 
 install.packages("tidyverse")
 install.packages("janitor")
 install.packages("ggpubr")
@@ -70,5 +70,15 @@ library(skimr)
 library(ggrepel)
 library(lubridate)
 library(dplyr)
-
+```
+### Import datasets
+For my analysis, I worked on three datasets and imported them to R for my Business Task.
+- dailyActivity_merged
+- dailyIntenisties_merged
+- hourlyCalories_merged
+```r
+dailyActivity_merged <- read_csv("dailyActivity_merged.csv")
+hourlyCalories_merged <- read_csv("hourlyCalories_merged.csv")
+dailyIntensities_merged <- read_csv("dailyIntensities_merged.csv")
+```
 
