@@ -10,9 +10,9 @@ This project analyzes Fitbit smart device usage data to uncover customer trends 
 ---
 
 ## Key Stakeholder
-- Urska Srsen - Bellabeat cofounder and Chief Creative Officer
-- SandoMur- Mathematician and Bellabeat’s cofounder
-- Bellabeat Marketing team
+-Urska Srsen - Bellabeat cofounder and Chief Creative Officer
+-SandoMur, Mathematician and Bellabeat’s cofounder
+-Bellabeat Marketing team
 
 # 2. Prepare
 b
