@@ -87,7 +87,7 @@ head(hourlyCalories_merged)
 str(hourlyCalories_merged)
 ```
 
-### Data Formatting and Preprocessing
+### Data Formatting and Preprocessing (Blue Color represents output respectively for corressponding code)
 **1. Unique Combinations**
 ```r
 nrow(distinct(dailyActivity_merged, Id, ActivityDate)) 
@@ -97,4 +97,48 @@ nrow(distinct(dailyIntensities_merged, Id, ActivityDay))
 nrow(distinct(hourlyCalories_merged, Id, ActivityHour))
 [1] 22099
 ```
+**2. Duplicates**
+```r
+> sum(duplicated(dailyActivity_merged))
+[1] 0
+> sum(duplicated(dailyIntensities_merged))
+[1] 0
+> sum(duplicated(hourlyCalories_merged))
+[1] 0
+```
+**3. Remove Duplicates and N/A**
+```r
+Dataser<-Dataset %>% distinct() %>% drop_na()  #inplace of dataset replace with one of the dataset variable where you saved your dataset while reading
+```
+**4. Renaming columns**
+Change the format of columns to lowercase to maintain consistency.
+```r
+> dailyActivity_merged <- rename_with(dailyActivity_merged, tolower)
+> dailyIntensities_merged <- rename_with(dailyIntensities_merged, tolower)
+> hourlyCalories_merged <- rename_with(hourlyCalories_merged, tolower)
+```
+**5. Cleaning**
+Changes the format of columns so that they are consistent. Ex: Replaces spaces and special characters with underscores, Removes or substitutes non-ASCII characters, Ensures valid R variables.
+```r
+clean_names(dataset)
+```
+**6.Date and Time Consistency**
+Formatting the Date and time columns of all CSV files for proper consistency.
+```r
+data <- read_csv("dailyActivity_merged.csv")
+hourlyCalories_merged <- hourlyCalories_merged %>% rename(date_time = activityhour) %>% mutate(date_time = mdy_hms(date_time))
+dailyIntensities_merged <- dailyIntensities_merged %>% rename(date = activityday) %>% mutate(date, format = "%m/%d/%Y")
+> view(dailyIntensities_merged)
+> data <- data %>% 
++    rename(date = activitydate) %>% 
++    mutate(date = as_date(date, format = "%m/%d/%Y"))
+> view(data)
+```
+**7. Merging datasets**
+Merging the dailyActivity_merged and dailyIntensities_merged csv files to do the analysis
+```r
+> dailyActivity_Intensity <- merge(data, dailyIntensities_merged, by = c("id", "date"))
+```
+
+
 
