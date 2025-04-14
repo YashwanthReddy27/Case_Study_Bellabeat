@@ -81,4 +81,20 @@ dailyActivity_merged <- read_csv("dailyActivity_merged.csv")
 hourlyCalories_merged <- read_csv("hourlyCalories_merged.csv")
 dailyIntensities_merged <- read_csv("dailyIntensities_merged.csv")
 ```
+### Display Dataset
+```r
+head(hourlyCalories_merged)
+str(hourlyCalories_merged)
+```
+
+### Data Formatting and Preprocessing
+**1. Unique Combinations**
+```r
+nrow(distinct(dailyActivity_merged, Id, ActivityDate)) 
+[1] 940
+nrow(distinct(dailyIntensities_merged, Id, ActivityDay))
+[1] 940
+nrow(distinct(hourlyCalories_merged, Id, ActivityHour))
+[1] 22099
+```
 
