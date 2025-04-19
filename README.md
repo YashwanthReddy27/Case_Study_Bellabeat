@@ -42,16 +42,16 @@ The dataset is provided in long format.
 **ROCCC** stands for:  
 **R**eliable, **O**riginal, **C**omprehensive, **C**urrent, and **C**ited.
 
-- ❌ **Reliable**: The data comes from only 30 users who self-reported via Amazon Mechanical Turk.  
-- ❌ **Original**: The data was distributed by third-party vendors.  
-- ⚠️ **Comprehensive**: While minute-level data is available for some metrics, the timeframe and population size limit its completeness.  
-- ❌ **Current**: The dataset is nearly a decade old (2016).  
-- ❌ **Cited**: The original source (Amazon MTurk) is not verifiable or peer-reviewed.
+-  **Reliable**: The data comes from only 30 users who self-reported via Amazon Mechanical Turk.  
+-  **Original**: The data was distributed by third-party vendors.  
+-  **Comprehensive**: While minute-level data is available for some metrics, the timeframe and population size limit its completeness.  
+-  **Current**: The dataset is nearly a decade old (2016).  
+-  **Cited**: The original source (Amazon MTurk) is not verifiable or peer-reviewed.
 
 ➡ Overall, the dataset **does not fully meet the ROCCC criteria**.
 
 # 3. Process
-I used R to conduct my analysis as it is easy to use and keeping in mind the amount of data we have.
+I used R to conduct my analysis, as it is easy to use, considering the amount of data we have.
 
 ### Install and Load required Packages 
 ```r
@@ -72,7 +72,7 @@ library(lubridate)
 library(dplyr)
 ```
 ### Import datasets
-For my analysis, I worked on three datasets and imported them to R for my Business Task.
+For my analysis, I worked on three datasets and imported them into R for my Business Task.
 - dailyActivity_merged
 - dailyIntenisties_merged
 - hourlyCalories_merged
@@ -87,7 +87,7 @@ head(hourlyCalories_merged)
 str(hourlyCalories_merged)
 ```
 
-### Data Formatting and Preprocessing (Blue Color represents output respectively for corressponding code)
+### Data Formatting and Preprocessing (Blue Color represents output respectively for corresponding code)
 **1. Unique Combinations**
 ```r
 nrow(distinct(dailyActivity_merged, Id, ActivityDate)) 
@@ -111,14 +111,14 @@ nrow(distinct(hourlyCalories_merged, Id, ActivityHour))
 Dataser<-Dataset %>% distinct() %>% drop_na()  #inplace of dataset replace with one of the dataset variable where you saved your dataset while reading
 ```
 **4. Renaming columns**
-Change the format of columns to lowercase to maintain consistency.
+Change the column format to lowercase to maintain consistency.
 ```r
 > dailyActivity_merged <- rename_with(dailyActivity_merged, tolower)
 > dailyIntensities_merged <- rename_with(dailyIntensities_merged, tolower)
 > hourlyCalories_merged <- rename_with(hourlyCalories_merged, tolower)
 ```
 **5. Cleaning**
-Changes the format of columns so that they are consistent. Ex: Replaces spaces and special characters with underscores, Removes or substitutes non-ASCII characters, Ensures valid R variables.
+Changes the format of columns to ensure consistency. Ex: Replaces spaces and special characters with underscores, removes or substitutes non-ASCII characters, ensures valid R variables.
 ```r
 clean_names(dataset)
 ```
@@ -139,6 +139,25 @@ Merging the dailyActivity_merged and dailyIntensities_merged csv files to do the
 ```r
 > dailyActivity_Intensity <- merge(data, dailyIntensities_merged, by = c("id", "date"))
 ```
-
-
-
+# 4. Analyze
+Analyzing the above-mentioned datasets to solve the business task at hand.
+**1. Summary of the Merged dataset**
+I wanted to get the gist of the merged dataset to get the overall summary of the dataset.
+```r
+> summary_stats <- df %>%
++    summarise(
++        total_steps = sum(totalsteps, na.rm = TRUE),
++        avg_steps   = mean(totalsteps, na.rm = TRUE),
++        total_distance = sum(totaldistance, na.rm = TRUE),
++        avg_distance   = mean(totaldistance, na.rm = TRUE),
++        total_calories = sum(calories, na.rm = TRUE),
++        avg_calories   = mean(calories, na.rm = TRUE)
++    )
+total_steps avg_steps total_distance avg_distance total_calories avg_calories
+1     7179636  7637.911        5160.32     5.489702        2165393      2303.61
+```
+**2. Time Series Analysis**
+```r
+ggplot(df, aes(x= date, y=totalsteps)) + geom_line() 
+> + geom_point() + labs(title ="Total Steps Over Time", x = "Date", y= "Total Steps") + theme_minmal()
+```
