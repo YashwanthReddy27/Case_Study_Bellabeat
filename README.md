@@ -161,3 +161,4 @@ total_steps avg_steps total_distance avg_distance total_calories avg_calories
 ggplot(df, aes(x= date, y=totalsteps)) + geom_line() 
 > + geom_point() + labs(title ="Total Steps Over Time", x = "Date", y= "Total Steps") + theme_minmal()
 ```
+[See the Steps over time graph here](Graphs/1.jpg)
