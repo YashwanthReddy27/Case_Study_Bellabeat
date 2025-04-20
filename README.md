@@ -1,7 +1,7 @@
 # Case_Study_Bellabeat
 **About the company:**
-Bellabeat is a high-tech company that manufactures health-focused products. Collecting data on activity, sleep, stress, and reproductive health has allowed Bellabeat to empower women with  knowledge about their own health and habits. Since it was founded in 2013, Bellabeat has grown rapidly and quickly positioned  itself as a tech-driven wellness company for women.
-
+Bellabeat is a high-tech company that manufactures health-focused products. Collecting data on activity, sleep, stress, and reproductive health has allowed Bellabeat to empower women with  knowledge about their own health and habits. Since it was founded in 2013, Bellabeat has grown rapidly and has quickly positioned  itself as a tech-driven wellness company for women.
+You can access the  RStudio project link: [Casestudy](https://posit.cloud/content/9918205)
 # 1. Ask 
  ## 📊 Business Task
 
@@ -53,7 +53,7 @@ The dataset is provided in long format.
 # 3. Process
 I used R to conduct my analysis, as it is easy to use, considering the amount of data we have.
 
-### Install and Load required Packages 
+### 3.1 Install and Load required Packages 
 ```r
 install.packages("tidyverse")
 install.packages("janitor")
@@ -71,7 +71,7 @@ library(ggrepel)
 library(lubridate)
 library(dplyr)
 ```
-### Import datasets
+### 3.2 Import datasets
 For my analysis, I worked on three datasets and imported them into R for my Business Task.
 - dailyActivity_merged
 - dailyIntenisties_merged
@@ -81,14 +81,14 @@ dailyActivity_merged <- read_csv("dailyActivity_merged.csv")
 hourlyCalories_merged <- read_csv("hourlyCalories_merged.csv")
 dailyIntensities_merged <- read_csv("dailyIntensities_merged.csv")
 ```
-### Display Dataset
+**Display Dataset**
 ```r
 head(hourlyCalories_merged)
 str(hourlyCalories_merged)
 ```
 
-### Data Formatting and Preprocessing (Blue Color represents output respectively for corresponding code)
-**1. Unique Combinations**
+### 3.3 Data Formatting and Preprocessing (Blue Color represents output respectively for corresponding code)
+**i. Unique Combinations**
 ```r
 nrow(distinct(dailyActivity_merged, Id, ActivityDate)) 
 [1] 940
@@ -97,7 +97,7 @@ nrow(distinct(dailyIntensities_merged, Id, ActivityDay))
 nrow(distinct(hourlyCalories_merged, Id, ActivityHour))
 [1] 22099
 ```
-**2. Duplicates**
+**ii. Duplicates**
 ```r
 > sum(duplicated(dailyActivity_merged))
 [1] 0
@@ -106,23 +106,23 @@ nrow(distinct(hourlyCalories_merged, Id, ActivityHour))
 > sum(duplicated(hourlyCalories_merged))
 [1] 0
 ```
-**3. Remove Duplicates and N/A**
+**iii. Remove Duplicates and N/A**
 ```r
 Dataser<-Dataset %>% distinct() %>% drop_na()  #inplace of dataset replace with one of the dataset variable where you saved your dataset while reading
 ```
-**4. Renaming columns**
+**iv. Renaming columns**
 Change the column format to lowercase to maintain consistency.
 ```r
 > dailyActivity_merged <- rename_with(dailyActivity_merged, tolower)
 > dailyIntensities_merged <- rename_with(dailyIntensities_merged, tolower)
 > hourlyCalories_merged <- rename_with(hourlyCalories_merged, tolower)
 ```
-**5. Cleaning**
+**v. Cleaning**
 Changes the format of columns to ensure consistency. Ex: Replaces spaces and special characters with underscores, removes or substitutes non-ASCII characters, ensures valid R variables.
 ```r
 clean_names(dataset)
 ```
-**6.Date and Time Consistency**
+**vi. Date and Time Consistency**
 Formatting the Date and time columns of all CSV files for proper consistency.
 ```r
 data <- read_csv("dailyActivity_merged.csv")
@@ -134,7 +134,7 @@ dailyIntensities_merged <- dailyIntensities_merged %>% rename(date = activityday
 +    mutate(date = as_date(date, format = "%m/%d/%Y"))
 > view(data)
 ```
-**7. Merging datasets**
+**vii. Merging datasets**
 Merging the dailyActivity_merged and dailyIntensities_merged csv files to do the analysis
 ```r
 > dailyActivity_Intensity <- merge(data, dailyIntensities_merged, by = c("id", "date"))
@@ -147,7 +147,7 @@ The dataset on which the entire analysis is done
 
 # 4. Analyze
 Analyzing the above-mentioned datasets to solve the business task at hand.
-**1. Summary of the Merged dataset**
+**i. Summary of the Merged dataset**
 I wanted to get a sense of the merged dataset to obtain an overall summary of the dataset.
 ```r
 > summary_stats <- df %>%
@@ -162,7 +162,7 @@ I wanted to get a sense of the merged dataset to obtain an overall summary of th
 total_steps avg_steps total_distance avg_distance total_calories avg_calories
 1     7179636  7637.911        5160.32     5.489702        2165393      2303.61
 ```
-**2. Time Series Analysis**
+**ii. Time Series Analysis**
 I wanted to check the total steps over different dates to see how they vary 
 ```r
 ggplot(df, aes(x= date, y=totalsteps)) + geom_line() 
@@ -187,7 +187,7 @@ Total Calories burned over time vs Date: [here](Graphs/3.jpg)
 
 Finding the correlation between different metrics to analyze the users better
 
-**Correlation between steps and calories**
+**iii. Correlation between steps and calories**
 ```r
 cor_steps_cal<- cor(df$totalsteps, df$calories, use = "complete.obs")
 > print(paste("Correlation bw steps and Calories:", round(cor_steps_cal,2)))
@@ -216,7 +216,7 @@ geom_line(aes(y= totalsteps, color ="Steps")) +
 ```
 steps vs calories: [here](Graphs/5.jpg)
 
-**Weekday vs Weekend Analysis**
+**iv. Weekday vs Weekend Analysis**
 Analyzed the data between weekends and weekdays to see how they vary, and actually to come to a conclusion, do users work out more on weekends than weekdays?
 
 Added two new columns, weekdays and weekends
@@ -250,7 +250,7 @@ ggplot(df, aes(x= weekend, y = totalsteps, fill = weekend))+
 ```
 Total steps vs Day type: [here](Graphs/6.jpg)
 
-**Average steps by Day of week**
+**v. Average steps by Day of week**
 Here, we summarize the total steps, total distance, and calories for each weekday.
 ```r
 day_of_week_summary <- df %>%
@@ -275,7 +275,7 @@ Plotting the average steps by day of week
 ```
 Avg steps vs Day of weekly [here](Graphs/7.jpg)
 
-**Clustering Analysis**
+**vi. Clustering Analysis**
 Performed clustering based on different activity metrics
 ```r
 > library(cluster)
@@ -303,7 +303,7 @@ Checking the outliers to see if many affect the analysis. However, there was not
  [1] 36019 22244 22770 22359 22988 22026 23186 29326 23629 27745 21727 21420
 ```
 
-**Correlation Analysis**
+**vii. Correlation Analysis**
 I wanted to check the correlation between every metric in the dataframe to see how closely they are related.
 You can see that total steps and total distance are correlated, but total steps, total distance, and calories are less correlated than total steps and total distance, as we have seen before. This confirms it.
 ```r
@@ -361,7 +361,7 @@ Calculated the values again and plotted them.
 +         pct_lightly_active = ifelse(pct_lightly_active > 100, NA, pct_lightly_active)
 +     )
 ```
-Plotting the avg intensity graph
+Plotting the average intensity graph
 ```r
 > avg_intensity <- df %>%
 +     summarise(
@@ -381,6 +381,11 @@ Plotting the avg intensity graph
 +     ) +
 +     theme_minimal()
 ```
-Abg Intensity Levels: [here](Graphs/10.jpg)
+Avg Intensity Levels: [here](Graphs/10.jpg)
+
+# 5. Share
+All the graphs, link to the Rstudio project and data have been shared in this repo
+
+# 6. Act
 
 
