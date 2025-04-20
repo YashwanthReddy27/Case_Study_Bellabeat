@@ -5,7 +5,7 @@ Bellabeat is a high-tech company that manufactures health-focused products. Coll
 # 1. Ask 
  ## 📊 Business Task
 
-This project analyzes Fitbit smart device usage data to uncover customer trends and behavioral patterns. These insights will support Bellabeat’s marketing team by identifying what features and habits users most value, helping guide product marketing strategies and future development.
+This project analyzes Fitbit smart device usage data to uncover customer trends and behavioral patterns. These insights will support Bellabeat’s marketing team by identifying the features and habits that users value most, helping to guide product marketing strategies and future development.
 
 ---
 
@@ -275,11 +275,112 @@ Plotting the average steps by day of week
 ```
 Avg steps vs Day of weekly [here](Graphs/7.jpg)
 
+**Clustering Analysis**
+Performed clustering based on different activity metrics
+```r
+> library(cluster)
+> activity_data <-scale(df %>% select(totalsteps, totaldistance, calories, veryactiveminutes.x, fairlyactiveminutes.x, lightlyactiveminutes.x))
+> set.seed(123)
+> clusters <- kmeans(activity_data, centers= 2)
+> df$cluster <-as.factor(clusters$cluster)
+```
 
+```r
+> ggplot(df, aes(x = totalsteps, y= calories, color= cluster))+
++ geom_point()+  labs(title = "Clustering of Days Based on Activity Metrics",
++                    x = "Total Steps",
++                    y = "Calories") +
++    theme_minimal()
+```
 
+Clustering based on Diff Activity Metrics [here](Graphs/8.jpg)
 
+Checking the outliers to see if many affect the analysis. However, there was not much that would significantly affect the analysis.
+```r
+> boxplot_stats <- boxplot(df$totalsteps, plot = FALSE)
+> outliers <- df$totalsteps[df$totalsteps %in% boxplot_stats$out]
+> print(outliers)
+ [1] 36019 22244 22770 22359 22988 22026 23186 29326 23629 27745 21727 21420
+```
 
+**Correlation Analysis**
+I wanted to check the correlation between every metric in the dataframe to see how closely they are related.
+You can see that total steps and total distance are correlated, but total steps, total distance, and calories are less correlated than total steps and total distance, as we have seen before. This confirms it.
+```r
+> metrics <- df %>% 
++    select(totalsteps, totaldistance, calories, veryactiveminutes.x, fairlyactiveminutes.x, lightlyactiveminutes.x, sedentaryminutes.x)
 
+> # Compute the correlation matrix
+> corr_matrix <- cor(metrics, use = "complete.obs")
 
+> # Visualize the correlation matrix
+> corrplot(corr_matrix, method = "circle")
+```
+Correlation Matrix: [here](Graphs/9.jpg)
+
+**Plotting the Average Intensity Levels**
+I plotted by calculating the average intensity levels, but the percentage for avg_light and avg_very was Inf, maybe even more, when I plotted for the y axis at 1000 to check the percentage.
+So I calculated the summary for every metric, and we can see the Max as Infinite, which caused the issue.
+```r
+> summary(df$pct_very_active)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.00    0.00   26.16     Inf  154.45     Inf      84 
+> summary(df$pct_moderately_active)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.00    0.00   56.98   45.40   79.12   97.74      85 
+> summary(df$pct_lightly_active)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  43.73  687.10 1491.55     Inf 5955.52     Inf      84 
+```
+Hence, filtered out only the finite values for the analysis
+```r
+> avg_intensity <- df %>%
++     filter(is.finite(pct_very_active), is.finite(pct_moderately_active), is.finite(pct_lightly_active)) %>%
++     summarise(
++         avg_very = mean(pct_very_active, na.rm = TRUE),
++         avg_moderate = mean(pct_moderately_active, na.rm = TRUE),
++         avg_light = mean(pct_lightly_active, na.rm = TRUE)
++     ) %>%
++     tidyr::gather(key = "intensity", value = "percentage")
+```
+Calculated the values again and plotted them.
+```r
+> df <- df %>%
++     mutate(
++         total_minutes = veryactiveminutes.x + fairlyactiveminutes.x + lightlyactiveminutes.x
++     ) %>%
++     filter(total_minutes > 0) %>%
++     mutate(
++         pct_very_active = (veryactiveminutes.x / total_minutes) * 100,
++         pct_moderately_active = (fairlyactiveminutes.x / total_minutes) * 100,
++         pct_lightly_active = (lightlyactiveminutes.x / total_minutes) * 100
++     ) %>%
++     mutate(
++         pct_very_active = ifelse(pct_very_active > 100, NA, pct_very_active),
++         pct_moderately_active = ifelse(pct_moderately_active > 100, NA, pct_moderately_active),
++         pct_lightly_active = ifelse(pct_lightly_active > 100, NA, pct_lightly_active)
++     )
+```
+Plotting the avg intensity graph
+```r
+> avg_intensity <- df %>%
++     summarise(
++         avg_very = mean(pct_very_active, na.rm = TRUE),
++         avg_moderate = mean(pct_moderately_active, na.rm = TRUE),
++         avg_light = mean(pct_lightly_active, na.rm = TRUE)
++     ) %>%
++     tidyr::gather(key = "intensity", value = "percentage")
+
+> ggplot(avg_intensity, aes(x = intensity, y = percentage, fill = intensity)) +
++     geom_bar(stat = "identity") +
++     scale_y_continuous(limits = c(0, 100)) +
++     labs(
++         title = "Average Activity Intensity Levels",
++         x = "Intensity",
++         y = "Percentage (%)"
++     ) +
++     theme_minimal()
+```
+Abg Intensity Levels: [here](Graphs/10.jpg)
 
 
