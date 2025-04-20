@@ -1,7 +1,9 @@
 # Case_Study_Bellabeat
 **About the company:**
-Bellabeat is a high-tech company that manufactures health-focused products. Collecting data on activity, sleep, stress, and reproductive health has allowed Bellabeat to empower women with  knowledge about their own health and habits. Since it was founded in 2013, Bellabeat has grown rapidly and has quickly positioned  itself as a tech-driven wellness company for women.
+Bellabeat is a high-tech company that manufactures health-focused products. Collecting data on activity, sleep, stress, and reproductive health has allowed Bellabeat to empower women with  knowledge about their own health and habits. Since it was founded in 2013, Bellabeat has grown rapidly and has quickly positioned  itself as a tech-driven wellness company for women. 
+
 You can access the  RStudio project link: [Casestudy](https://posit.cloud/content/9918205)
+
 # 1. Ask 
  ## 📊 Business Task
 
