@@ -139,10 +139,16 @@ Merging the dailyActivity_merged and dailyIntensities_merged csv files to do the
 ```r
 > dailyActivity_Intensity <- merge(data, dailyIntensities_merged, by = c("id", "date"))
 ```
+
+The dataset on which the entire analysis is done
+```r
+ df<- dailyActivity_Intensity
+```
+
 # 4. Analyze
 Analyzing the above-mentioned datasets to solve the business task at hand.
 **1. Summary of the Merged dataset**
-I wanted to get the gist of the merged dataset to get the overall summary of the dataset.
+I wanted to get a sense of the merged dataset to obtain an overall summary of the dataset.
 ```r
 > summary_stats <- df %>%
 +    summarise(
@@ -197,9 +203,10 @@ ggplot(df, aes(x = totalsteps, y = calories)) +
 +    theme_minimal()
 ```
 
-Correlation bw steps and calories: [here](Graphs/4.jpg)
+Correlation between steps and calories: [here](Graphs/4.jpg)
 
-Also, I plotted the steps vs calories over time to better uderstand the relation 
+Additionally, I plotted the steps versus calories over time to better understand the relationship.
+Checks out that calories burned relate to the number of steps taken every day, except for some outliers and other data points that would have done other jobs rather than walking/running, as you see in the correlation graph. 
 ```r
 geom_line(aes(y= totalsteps, color ="Steps")) +
 +    geom_line(aes(y = calories, color = "Calories")) + 
@@ -208,6 +215,65 @@ geom_line(aes(y= totalsteps, color ="Steps")) +
 +    theme_minimal()
 ```
 steps vs calories: [here](Graphs/5.jpg)
+
+**Weekday vs Weekend Analysis**
+Analyzed the data between weekends and weekdays to see how they vary, and actually to come to a conclusion, do users work out more on weekends than weekdays?
+
+Added two new columns, weekdays and weekends
+```r
+df$weekday <- weekdays(df$date) 
+df$weekend <- ifelse(df$weekday %in% c("Saturday", "Sunday"), "Weekend", "Weekday")
+```
+
+```r
+> weekend_summary <- df %>%
++    group_by(weekend) %>%
++    summarise(
++        avg_steps = mean(totalsteps, na.rm = TRUE),
++        avg_distance = mean(totaldistance, na.rm = TRUE),
++        avg_calories = mean(calories, na.rm = TRUE)
++    )
+> print(weekend_summary)
+# A tibble: 2 × 4
+  weekend avg_steps avg_distance avg_calories
+  <chr>       <dbl>        <dbl>        <dbl>
+1 Weekday     7669.         5.51        2302.
+2 Weekend     7551.         5.45        2310.
+```
+Seeing the results, the workout ratio between weekends and weekdays is almost identical.
+
+Plotting the total steps against the data type checked out that weekend revealed a normal distribution with some outliers. However, for weekdays, the distribution was left-skewed, suggesting that they may have done other work that required walking. 
+```r
+ggplot(df, aes(x= weekend, y = totalsteps, fill = weekend))+
++    geom_boxplot()+
++    labs(title = "Total Steps: Weekday vs Weekend",x= "Day Type" , y ="Total Steps") + theme_minimal()
+```
+Total steps vs Day type: [here](Graphs/6.jpg)
+
+**Average steps by Day of week**
+Here, we summarize the total steps, total distance, and calories for each weekday.
+```r
+day_of_week_summary <- df %>%
++    group_by(weekday) %>%
++    summarise(
++        avg_steps = mean(totalsteps, na.rm = TRUE),
++        avg_distance = mean(totaldistance, na.rm = TRUE),
++        avg_calories = mean(calories, na.rm = TRUE),
++        .groups = "drop"  # Ensures ungrouped output
++    )
+```
+Plotting the average steps by day of week
+```r
+> ggplot(day_of_week_summary, aes(x = weekday, y = avg_steps)) +
++    geom_col(fill = "steelblue") +
++    labs(
++        title = "Average Steps by Day of the Week",
++        x = "Day of the Week",
++        y = "Average Steps"
++    ) +
++    theme_minimal()
+```
+Avg steps vs Day of weekly [here](Graphs/7.jpg)
 
 
 
