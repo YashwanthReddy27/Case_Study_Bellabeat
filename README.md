@@ -298,7 +298,7 @@ Performed clustering based on different activity metrics
 Clustering based on Diff Activity Metrics [here](Graphs/8.jpg)
 
 Checking the outliers to see if many affect the analysis. However, there was not much that would significantly affect the analysis.
-```r
+“`r
 > boxplot_stats <- boxplot(df$totalsteps, plot = FALSE)
 > outliers <- df$totalsteps[df$totalsteps %in% boxplot_stats$out]
 > print(outliers)
@@ -321,21 +321,21 @@ You can see that total steps and total distance are correlated, but total steps,
 Correlation Matrix: [here](Graphs/9.jpg)
 
 **Plotting the Average Intensity Levels**
-I plotted by calculating the average intensity levels, but the percentage for avg_light and avg_very was Inf, maybe even more, when I plotted for the y axis at 1000 to check the percentage.
-So I calculated the summary for every metric, and we can see the Max as Infinite, which caused the issue.
-```r
+I plotted by calculating the average intensity levels, but the percentage for avg_light and avg_very was Inf, possibly even higher, when I plotted the y-axis at 1000 to check the percentage.
+I calculated the summary for every metric, and we can see that the maximum value is set to 'Infinite', which caused the issue.
+“`r
 > summary(df$pct_very_active)
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA’s 
    0.00    0.00   26.16     Inf  154.45     Inf      84 
 > summary(df$pct_moderately_active)
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA’s 
    0.00    0.00   56.98   45.40   79.12   97.74      85 
 > summary(df$pct_lightly_active)
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA’s 
   43.73  687.10 1491.55     Inf 5955.52     Inf      84 
 ```
 Hence, filtered out only the finite values for the analysis
-```r
+“`r
 > avg_intensity <- df %>%
 +     filter(is.finite(pct_very_active), is.finite(pct_moderately_active), is.finite(pct_lightly_active)) %>%
 +     summarise(
@@ -386,8 +386,10 @@ Plotting the average intensity graph
 Avg Intensity Levels: [here](Graphs/10.jpg)
 
 # 5. Share
-All the graphs, link to the Rstudio project and data have been shared in this repo
+All the graphs, link to the RStudio project, and data have been shared in this repo.
 
 # 6. Act
-
+- After analyzing the Average intensity levels, it is evident that the moderate and very high average intensity levels are significantly lower, indicating to users the workouts they need to do to balance out the intensity levels, which will give Bellabeat its uniqueness as a product.
+- The total number of steps or distance is not highly correlated with calories burned. Counting calories burned only due to steps can help users obtain better analytics and motivate them to walk more. Marketing the product with a separate analytics tracker for activities can improve usage of Bellabeat.
+- As the average number of weekdays is left-skewed and varies daily, offering a reward system for goals set on weekdays will motivate users to use the Bellabeat product while also helping them reach their weekday goals, ultimately keeping them healthier.
 
