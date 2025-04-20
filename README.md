@@ -157,8 +157,63 @@ total_steps avg_steps total_distance avg_distance total_calories avg_calories
 1     7179636  7637.911        5160.32     5.489702        2165393      2303.61
 ```
 **2. Time Series Analysis**
+I wanted to check the total steps over different dates to see how they vary 
 ```r
 ggplot(df, aes(x= date, y=totalsteps)) + geom_line() 
 > + geom_point() + labs(title ="Total Steps Over Time", x = "Date", y= "Total Steps") + theme_minmal()
 ```
-[See the Steps over time graph here](Graphs/1.jpg)
+Total steps over time vs Date: [here](Graphs/1.jpg)
+
+Checked the total distance over different dates to see how they relate to steps
+Here, the steps correlate with the distance, so it shows that the steps recorded by the system were proper
+```r
+ggplot(df, aes(x= date, y=totaldistance)) + geom_line() 
+> + geom_point() + labs(title ="Total Distance Over Time", x = "Date", y= "Distance") + theme_minmal()
+```
+Total distance over time vs Date: [here](Graphs/2.jpg)
+
+Checked the total calories burned over the date
+```r
+ggplot(df, aes(x= date, y=calories)) + geom_line() 
+> + geom_point() + labs(title ="Calories Burned Over Time", x = "Date", y= "Distance") + theme_minmal()
+```
+Total Calories burned over time vs Date: [here](Graphs/3.jpg)
+
+Finding the correlation between different metrics to analyze the users better
+
+**Correlation between steps and calories**
+```r
+cor_steps_cal<- cor(df$totalsteps, df$calories, use = "complete.obs")
+> print(paste("Correlation bw steps and Calories:", round(cor_steps_cal,2)))
+[1] "Correlation between steps and Calories: 0.59”
+```
+```r
+ggplot(df, aes(x = totalsteps, y = calories)) +
++    geom_point() +
++    geom_smooth(method = "lm", se = FALSE) +
++    labs(title = "Correlation between Total Steps and Calories",
++         x = "Total Steps",
++         y = "Calories") +
++    theme_minimal()
+```
+
+Correlation bw steps and calories: [here](Graphs/4.jpg)
+
+Also, I plotted the steps vs calories over time to better uderstand the relation 
+```r
+geom_line(aes(y= totalsteps, color ="Steps")) +
++    geom_line(aes(y = calories, color = "Calories")) + 
++    labs(title= "Steps vs Calories over time", x= "Date", y = " Value")+
++    scale_color_manual("", values = c("Steps" = "blue", "Calories" = "red"))+
++    theme_minimal()
+```
+steps vs calories: [here](Graphs/5.jpg)
+
+
+
+
+
+
+
+
+
